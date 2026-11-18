@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SuperSearch</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div class="main">
+            <!-- <h1>Добро пожаловать!</h1> -->
+            <div class="clock">09:11:01</div>
+            <p>Это моя первая веб-страница.</p>
+            <input placeholder="Уничтожь эту строку!">
+            <div class="links">
+
+                <a href="https://google.com">
+                    <img src="images/google.png" alt="Google">
+                </a>
+            
+                <a href="https://youtube.com">
+                    <img src="images/youtube.png" alt="YouTube">
+                </a>
+            
+                <a href="https://github.com">
+                    <img src="images/github.png" alt="GitHub">
+                </a>
+            
+                <a href="https://reddit.com">
+                    <img src="images/reddit.png" alt="Reddit">
+                </a>
+            
+                <a href="https://wikipedia.org">
+                    <img src="images/wikipedia.png" alt="Wikipedia">
+                </a>
+            
+                <a href="https://openai.com">
+                    <img src="images/openai.png" alt="OpenAI">
+                </a>
+            
+            </div>
+        </div>
+        
+        <script>
+            function updateClock() {
+                const now = new Date();
+
+                document.querySelector(".clock").textContent =
+                now.toLocaleTimeString();
+            }
+
+            updateClock();
+            setInterval(updateClock, 1000);
+        </script>
+    </body>
+</html>
