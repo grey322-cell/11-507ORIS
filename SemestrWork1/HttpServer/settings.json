@@ -1,0 +1,4 @@
+{
+  "Address": "http://localhost:5000/",
+  "StaticDirectory": "static"
+}
