@@ -46,13 +46,13 @@ public class HttpServer
                 response.ContentType = "text/html; charset=utf-8";
                 response.ContentLength64 = bufferq.Length;
                 await response.OutputStream.WriteAsync(bufferq);
+                response.Close();
+                continue;
             }
             byte[] buffer = await File.ReadAllBytesAsync(filePath);
             response.StatusCode = 200;
             response.ContentType = GetContentType(filePath);
-            
             response.ContentLength64 = buffer.Length;
-            await response.OutputStream.WriteAsync(buffer);
             
             await response.OutputStream.WriteAsync(buffer);
             response.Close();
