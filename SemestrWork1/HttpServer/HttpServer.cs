@@ -5,38 +5,60 @@ namespace HttpServer;
 
 public class HttpServer
 {
-    private readonly HttpListener Listener; 
-    private readonly string Url; 
-    private readonly string StaticDirectory; 
+    private readonly HttpListener _listener; 
+    private readonly string _url; 
+    private readonly string _staticDirectory; 
+    private readonly Router _router = new Router();
     
     public HttpServer(string url, string staticDirectory)
     {
-        Url = url;
-        Listener = new HttpListener();
-        Listener.Prefixes.Add(Url); 
-        StaticDirectory = staticDirectory;
+        _url = url;
+        _listener = new HttpListener();
+        _listener.Prefixes.Add(_url); 
+        _staticDirectory = staticDirectory;
     }
     
     public async Task StartAsync()
     {
-        Listener.Start(); 
-        Console.WriteLine($"Сервер запущен и ждёт гостей по адресу: {Url}");
+        _listener.Start(); 
+        Console.WriteLine($"Сервер запущен и ждёт гостей по адресу: {_url}");
         
-        while (Listener.IsListening)
+        while (_listener.IsListening)
         {
             
-            var context = await Listener.GetContextAsync();
+            var context = await _listener.GetContextAsync();
             var request = context.Request;
             string rawPath = request.Url?.AbsolutePath ?? "/";
-            if (rawPath == "/")
+            var response = context.Response;
+            
+            if (!Path.HasExtension(rawPath))
             {
-                rawPath = "/index.html";
+                string? html = _router.Route(rawPath);
+
+                if (html != null)
+                {
+                    byte[] buffer1 = Encoding.UTF8.GetBytes(html);
+                    response.StatusCode = 200;
+                    response.ContentType = "text/html; charset=utf-8";
+                    response.ContentLength64 = buffer1.Length;
+                    await response.OutputStream.WriteAsync(buffer1);
+                }
+                else
+                {
+                    string notFound = "<h1>404 - Страница не найдена</h1>";
+                    byte[] buffer1 = Encoding.UTF8.GetBytes(notFound);
+                    response.StatusCode = 404;
+                    response.ContentType = "text/html; charset=utf-8";
+                    response.ContentLength64 = buffer1.Length;
+                    await response.OutputStream.WriteAsync(buffer1);
+                }
+
+                response.Close();
+                continue;
             }
             
             string relativePath = rawPath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
-            string filePath = Path.Combine(StaticDirectory, relativePath);
-            var response = context.Response;
-            
+            string filePath = Path.Combine(_staticDirectory, relativePath);
             
             if (!File.Exists(filePath))
             {
