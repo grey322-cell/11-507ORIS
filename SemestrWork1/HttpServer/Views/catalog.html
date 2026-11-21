@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог карточек</title>
+</head>
+<body>
+<div class="catalog">
+    {{#each Cards}}
+    <div class="card">
+        <h3>{{Name}}</h3>
+        <p><strong>Редкость:</strong> {{Rarity}}</p>
+        <p>{{Description}}</p>
+        <img src="{{ImageUrl}}" alt="{{Name}}">
+    </div>
+    {{/each}}
+</div>
+</body>
+</html>
